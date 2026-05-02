@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annotated</title>
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="glass-header">
+            <h1>Annotated</h1>
+            <div class="auth-buttons">
+                <button class="btn btn-x" title="Login with X">𝕏</button>
+                <button class="btn btn-google" title="Login with Google">G</button>
+            </div>
+        </header>
+        
+        <main>
+            <section class="clip-section">
+                <h2>Current Clip</h2>
+                <div class="clip-box glass-panel" id="clipBox">
+                    <p class="placeholder-text">Highlight text or right-click media on any page to clip it.</p>
+                </div>
+            </section>
+
+            <section class="annotation-section">
+                <h2>Add Commentary</h2>
+                <textarea class="glass-input" id="commentary" placeholder="Share your thoughts..."></textarea>
+                <div class="action-row">
+                    <button class="btn btn-record" id="recordBtn" title="Record Audio">🎤</button>
+                    <button class="btn btn-primary" id="postBtn">Post Annotation</button>
+                </div>
+            </section>
+
+            <section class="feed-section">
+                <div class="feed-header">
+                    <h2>Community Feed</h2>
+                    <button class="btn-text">Refresh</button>
+                </div>
+                <div class="feed-list" id="feedList">
+                    <!-- Mock feed item -->
+                    <div class="feed-item glass-panel">
+                        <div class="feed-user">@jason</div>
+                        <div class="feed-clip">"The future of AI is agentic. It's not just about chat."</div>
+                        <div class="feed-comment">Exactly what I was saying on the pod last week!</div>
+                        <div class="feed-meta">
+                            <a href="#" class="source-link">techcrunch.com</a>
+                            <button class="btn-claim">File a claim</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="sidebar.js"></script>
+</body>
+</html>
