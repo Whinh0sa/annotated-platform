@@ -2,11 +2,17 @@ import { createClient } from '@supabase/supabase-js';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-// Initialize server-side Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Enforce SSR for SEO virality and prevent build crashes
+export const dynamic = 'force-dynamic';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+// Initialize server-side Supabase client with safety check
+const supabase = (supabaseUrl && supabaseKey) 
+  ? createClient(supabaseUrl, supabaseKey)
+  : null as any; // Allow build to pass; runtime will handle missing config if needed
+
 
 interface PageProps {
   params: { id: string };
@@ -37,7 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'player', // CRITICAL: Tells 𝕏 to render a media player frame
       title: `Annotation by @${annotation.users.username}`,
       description: annotation.commentary,
-      players: [{ playerUrl: annotation.media_url, width: 480, height: 240 }]
+      players: [{ playerUrl: annotation.media_url, streamUrl: annotation.media_url, width: 480, height: 240 }]
     }
   };
 }
