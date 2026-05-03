@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'player', // CRITICAL: Tells 𝕏 to render a media player frame
       title: `Annotation by @${annotation.users.username}`,
       description: annotation.commentary,
-      players: [{ url: annotation.media_url, width: 480, height: 240 }]
+      players: [{ playerUrl: annotation.media_url, width: 480, height: 240 }]
     }
   };
 }
