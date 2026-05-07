@@ -53,8 +53,7 @@
       {
         "resources": [
           "assets/ffmpeg-core.js",
-          "assets/ffmpeg-core.wasm",
-          "assets/ffmpeg-core.worker.js"
+          "assets/ffmpeg-core.wasm"
         ],
         "matches": ["<all_urls>"]
       }

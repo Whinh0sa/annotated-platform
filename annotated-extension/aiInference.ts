@@ -42,7 +42,8 @@ export async function generateSemanticTags(
       throw new LocalInferenceFailed('NATIVE_MODEL_UNAVAILABLE');
     }
 
-    session = await window.ai.createTextSession();
+    const aiGlobal = (globalThis as any).ai;
+    session = await aiGlobal.createTextSession();
     
     const prompt = `
       You are a semantic tagging engine for a social media annotation platform.
