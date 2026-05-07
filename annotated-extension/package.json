@@ -4,11 +4,16 @@
   "description": "Chrome extension for social annotation",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/copy-wasm.cjs",
     "dev": "plasmo dev",
+    "prebuild": "node scripts/copy-wasm.cjs",
     "build": "plasmo build",
     "package": "plasmo package"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.12.6",
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
     "@supabase/supabase-js": "^2.42.0",
     "plasmo": "0.86.0",
     "react": "^18.2.0",
@@ -20,5 +25,39 @@
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
     "typescript": "^5.4.5"
+  },
+  "manifest": {
+    "permissions": [
+      "sidePanel",
+      "activeTab",
+      "scripting",
+      "storage",
+      "identity",
+      "tabs",
+      "offscreen",
+      "tabCapture"
+    ],
+    "host_permissions": [
+      "https://*.supabase.co/*"
+    ],
+    "cross_origin_embedder_policy": {
+      "value": "require-corp"
+    },
+    "cross_origin_opener_policy": {
+      "value": "same-origin"
+    },
+    "content_security_policy": {
+      "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "assets/ffmpeg-core.js",
+          "assets/ffmpeg-core.wasm",
+          "assets/ffmpeg-core.worker.js"
+        ],
+        "matches": ["<all_urls>"]
+      }
+    ]
   }
 }

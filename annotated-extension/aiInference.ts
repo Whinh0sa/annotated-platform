@@ -14,12 +14,12 @@ export class LocalInferenceFailed extends Error {
  * Feature Detection: Checks if the native AI engine is available
  */
 export async function checkAIReady(): Promise<boolean> {
-  if (typeof window === 'undefined' || !window.ai) {
-    return false;
-  }
-  
+  // In a Service Worker, `window` is undefined. The Prompt API is exposed as
+  // the global `ai` object directly, not `window.ai`.
   try {
-    const status = await window.ai.canCreateTextSession();
+    const aiGlobal = (globalThis as any).ai;
+    if (!aiGlobal) return false;
+    const status = await aiGlobal.canCreateTextSession();
     return status === 'readily';
   } catch {
     return false;
@@ -69,22 +69,29 @@ export async function generateSemanticTags(
     
     // Cloud Fallback Logic: Margin Protection in action
     try {
+      // Retrieve token from chrome.storage (localStorage is unavailable in Service Workers)
+      const token = await new Promise<string>((resolve) => {
+        chrome.storage.local.get(['sb-access-token'], (res) => {
+          resolve(res['sb-access-token'] || '');
+        });
+      });
+
       const response = await fetch('https://annotated-platform.vercel.app/api/tags', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('sb-access-token') || ''}`
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ commentaryText, sourceText })
+        body: JSON.stringify({ commentaryText, sourceText }),
       });
 
       if (!response.ok) throw new Error(`Cloud API returned ${response.status}`);
       const data = await response.json();
       return data.tags || ['general'];
-      
+
     } catch (fallbackErr) {
       console.error('[CLOUD_FALLBACK_FAILED]', fallbackErr);
-      return ['general']; // The absolute bottom-tier fallback
+      return ['general']; // Absolute bottom-tier fallback
     }
     
   } finally {
